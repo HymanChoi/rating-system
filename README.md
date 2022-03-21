@@ -1,34 +1,52 @@
-# Vue 3 + Typescript + Vite
+# 影视作品评分系统
 
-This template should help get you started developing with Vue 3 and Typescript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+### 项目介绍
 
-## Recommended IDE Setup
+This is a rating system for film and television works.
 
-- [VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
+### 相关知识
 
-## Type Support For `.vue` Imports in TS
+1. Vue3
+2. Typescript
+3. Vite
+4. Vue-router
+5. Pinia
+6. Naive UI
+7. IndexDB
+8. Dexie
+9. Apexcharts
 
-Since TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates. However, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can enable Volar's `.vue` type support plugin by running `Volar: Switch TS Plugin on/off` from VSCode command palette.
-
-## Work with electron in development mode
-
-```
-yarn electron:dev
-```
-
-## Build your electron app
-
-```
-yarn app:build
-```
-
-## Open vite in browser in development mode
+### 项目结构
 
 ```
-yarn dev
+
 ```
 
-## Build files and can be served
+### 安装依赖
+
+```
+$ pnpm install
+```
+
+### 开发模式下启动 Electron
+
+```
+$ yarn electron:dev
+```
+
+### 构建 Electron 应用
+
+```
+$ yarn app:build
+```
+
+### 开发模式下启动 Web
+
+```
+$ yarn dev
+```
+
+### 构建 Web 应用
 
 ```
 yarn build
