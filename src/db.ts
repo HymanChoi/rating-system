@@ -1,16 +1,17 @@
-// db.ts
 import Dexie, { Table } from "dexie";
-import { Works } from "./type";
+import { Work, Tag } from "./type";
 
 export class MySubClassedDexie extends Dexie {
-  // 'works' is added by dexie when declaring the stores()
-  // We just tell the typing system this is the case
-  works!: Table<Works>;
+  works!: Table<Work>;
+  moviesTags!: Table<Tag>;
+  seriesTags!: Table<Tag>;
 
   constructor() {
     super("myDatabase");
     this.version(1).stores({
-      works: "++id, &name, type, score, tags", // Primary key and indexed props
+      works: "++id, &name, type, score, tags",
+      moviesTags: "++id, &name, count",
+      seriesTags: "++id, &name, count",
     });
   }
 }

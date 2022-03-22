@@ -47,6 +47,7 @@ import { defineComponent, onBeforeMount, reactive, toRaw, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useMessage } from "naive-ui";
 import { db } from "@/db";
+import { addTag } from "@/utils/db";
 
 interface DataProps {
   workInfo: any;
@@ -101,6 +102,7 @@ export default defineComponent({
 
         try {
           await db.works.where("name").equals(data.workInfo.name).modify(work);
+          addTag(work);
           message.success("修改成功");
         } catch (err) {
           console.error(err);
@@ -109,7 +111,7 @@ export default defineComponent({
     });
 
     onBeforeMount(() => {
-      const name = route.params.name as string;
+      const name = route.query.name as string;
       data.getWorkInfo(name);
     });
 

@@ -2,7 +2,10 @@
   <div class="home">
     <Statistic :moviesCount="moviesCount" :seriesCount="seriesCount" />
 
-    <RankList :movies="movies" :series="series" />
+    <n-grid :x-gap="20" :cols="24">
+      <n-gi :span="12"> <RankList :list="movies" /> </n-gi>
+      <n-gi :span="12"> <RankList :list="series" /> </n-gi>
+    </n-grid>
 
     <n-grid :x-gap="20" :y-gap="20" :cols="24">
       <!-- 类型 -->
@@ -40,10 +43,11 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, reactive, toRaw, toRefs } from "vue";
 import Statistic from "./components/Statistic/index.vue";
-import RankList from "./components/RankList/index.vue";
+import RankList from "@/components/RankList/index.vue";
 import { useMessage } from "naive-ui";
 import { db } from "@/db";
 import { compare } from "@/utils";
+import { addTag } from "@/utils/db";
 
 interface DataProps {
   moviesCount: number;
@@ -94,6 +98,7 @@ export default defineComponent({
 
         try {
           await db.works.add(work, "name");
+          addTag(work);
           message.success("添加成功");
           data.clearData();
           data.getList();

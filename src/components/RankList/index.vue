@@ -1,30 +1,17 @@
 <template>
-  <n-grid :x-gap="20" :cols="24">
-    <n-gi class="list" :span="12">
-      <div
-        class="list-item"
-        v-for="(item, index) of movies"
-        :key="index + 'movies'"
-        @click="goToWorkInfo(item.name)"
-      >
-        <span class="id">第 {{ index + 1 }} 名</span>
-        <span class="name">{{ item.name }}</span>
-        <span class="score">{{ item.score }} 分</span>
-      </div>
-    </n-gi>
-    <n-gi class="list" :span="12">
-      <div
-        class="list-item"
-        v-for="(item, index) of series"
-        :key="index + 'series'"
-        @click="goToWorkInfo(item.name)"
-      >
-        <span class="id">第 {{ index + 1 }} 名</span>
-        <span class="name">{{ item.name }}</span>
-        <span class="score">{{ item.score }} 分</span>
-      </div>
-    </n-gi>
-  </n-grid>
+  <div class="list">
+    <div
+      class="list-item"
+      v-for="(item, index) of list"
+      :key="index + 'series'"
+      title="点击查看作品详情"
+      @click="goToWorkInfo(item.name)"
+    >
+      <span class="id">第 {{ index + 1 }} 名</span>
+      <span class="name">{{ item.name }}</span>
+      <span class="score">{{ item.score }} 分</span>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -33,7 +20,7 @@ import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "RankList",
-  props: ["movies", "series"],
+  props: ["list"],
   setup() {
     const router = useRouter();
     const data = reactive({
@@ -43,7 +30,7 @@ export default defineComponent({
        * @param name
        */
       goToWorkInfo(name: string) {
-        router.push({ name: "info", params: { name: name } });
+        router.push({ path: "info", query: { name: name } });
       },
     });
 
