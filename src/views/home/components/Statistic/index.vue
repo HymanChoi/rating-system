@@ -1,65 +1,46 @@
 <template>
-  <n-grid :x-gap="20" :cols="24">
-    <n-gi :span="12">
-      <n-statistic
-        class="statistic"
-        label="电影"
-        v-model:value="moviesCount"
-        title="点击查看类型详情"
-        @click="goToCharts(0)"
-      >
-        <template #prefix>
-          <n-icon>
-            <IosFilm />
-          </n-icon>
-        </template>
-        <template #suffix> 部 </template>
-      </n-statistic>
-    </n-gi>
-    <n-gi :span="12">
-      <n-statistic
-        class="statistic"
-        label="电视剧"
-        v-model:value="seriesCount"
-        title="点击查看类型详情"
-        @click="goToCharts(1)"
-      >
-        <template #prefix>
-          <n-icon>
-            <IosFilm />
-          </n-icon>
-        </template>
-        <template #suffix> 部 </template>
-      </n-statistic>
-    </n-gi>
-  </n-grid>
+  <n-statistic
+    class="statistic"
+    :label="label"
+    v-model:value="count"
+    title="点击查看类型详情"
+    @click="goToCharts()"
+  >
+    <template #prefix>
+      <n-icon>
+        <IosFilm />
+      </n-icon>
+    </template>
+    <template #suffix> 部 </template>
+  </n-statistic>
 </template>
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
+import { useRouter } from "vue-router";
 import { IosFilm } from "@vicons/ionicons4";
-import router from "@/router";
 
 export default defineComponent({
-  name: "",
+  name: "Statistic",
   props: {
-    moviesCount: Number,
-    seriesCount: Number,
+    label: String,
+    count: Number,
+    path: String,
+    query: Object,
   },
   components: {
     IosFilm,
   },
   setup(props) {
-    const moviesCount = props.moviesCount;
-    const seriesCount = props.seriesCount;
+    const path = props.path;
+    const query = props.query;
+    const router = useRouter();
     const data = reactive({
       /**
        * 跳转到作品详情页
-       *
-       * @param type
        */
-      goToCharts(type: number) {
-        router.push({ path: "charts", query: { type: type } });
+      goToCharts() {
+        router.push({ path: path, query: query });
       },
     });
 

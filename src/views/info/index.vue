@@ -11,8 +11,9 @@
       size="medium"
     >
       <n-grid :x-gap="20" :cols="24">
-        <n-gi :span="12">
-          <div class="img"></div>
+        <n-gi :span="12" class="img-box">
+          <img v-if="imgUrl" class="img" :src="imgUrl" alt="" srcset="" />
+          <div v-else class="block"></div>
         </n-gi>
         <n-gi :span="12">
           <n-form-item label="名称" path="name" required>
@@ -47,10 +48,12 @@ import { defineComponent, onBeforeMount, reactive, toRaw, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useMessage } from "naive-ui";
 import { db } from "@/db";
-import { addTag } from "@/utils/db";
+import { addTagDB, editWorkDB } from "@/db/operate";
+import { searchMovieFormDouBan } from "@/api";
 
 interface DataProps {
   workInfo: any;
+  imgUrl: string;
   handleBack: () => void;
   getWorkInfo: (name: string) => void;
   editWork: () => void;
@@ -69,6 +72,7 @@ export default defineComponent({
         score: 0,
         tags: [],
       },
+      imgUrl: "",
       /**
        * 返回首页
        */
@@ -88,6 +92,15 @@ export default defineComponent({
           .then((res) => {
             data.workInfo = res;
           });
+
+        searchMovieFormDouBan({
+          q: name,
+        }).then((res: any) => {
+          if (res.count) {
+            const info = res.subjects[0];
+            data.imgUrl = info.images.large;
+          }
+        });
       },
       /**
        * 修改作品
@@ -101,8 +114,8 @@ export default defineComponent({
         };
 
         try {
-          await db.works.where("name").equals(data.workInfo.name).modify(work);
-          addTag(work);
+          await editWorkDB(data.workInfo.name, work);
+          await addTagDB(work);
           message.success("修改成功");
         } catch (err) {
           console.error(err);
@@ -127,10 +140,16 @@ export default defineComponent({
   padding: 20px;
 }
 
-.info .img {
-  width: 100%;
-  height: 100%;
+.info .img-box {
+  text-align: center;
+}
+.info .img-box .img {
+  height: calc(100vh - 120px);
+}
+.info .img-box .block {
   background-color: rgba(0, 128, 0, 0.12);
+  width: 100%;
+  height: calc(100vh - 120px);
 }
 
 .info .form {

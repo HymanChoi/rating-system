@@ -43,7 +43,7 @@ export default defineComponent({
 
 <style scoped>
 .list {
-  height: calc(100vh - 253px);
+  height: calc(100vh - 199px);
   padding: 10px;
   overflow-y: overlay;
   background-color: rgba(0, 128, 0, 0.12);

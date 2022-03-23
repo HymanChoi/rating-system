@@ -1,55 +1,84 @@
 <template>
   <div class="home">
-    <Statistic :moviesCount="moviesCount" :seriesCount="seriesCount" />
+    <n-grid :x-gap="20" :cols="24">
+      <n-gi :span="12">
+        <Statistic
+          label="电影"
+          :count="moviesCount"
+          path="charts"
+          :query="{ type: 0 }"
+        />
+      </n-gi>
+      <n-gi :span="12">
+        <Statistic
+          label="电视剧"
+          :count="seriesCount"
+          path="charts"
+          :query="{ type: 1 }"
+        />
+      </n-gi>
+    </n-grid>
 
     <n-grid :x-gap="20" :cols="24">
       <n-gi :span="12"> <RankList :list="movies" /> </n-gi>
       <n-gi :span="12"> <RankList :list="series" /> </n-gi>
     </n-grid>
 
-    <n-grid :x-gap="20" :y-gap="20" :cols="24">
-      <!-- 类型 -->
-      <n-gi :span="5">
-        <n-radio-group v-model:value="type">
-          <n-radio-button :value="0"> 电影 </n-radio-button>
-          <n-radio-button :value="1"> 电视剧 </n-radio-button>
-        </n-radio-group>
+    <n-grid :x-gap="20" :cols="24">
+      <n-gi :span="12">
+        <n-button style="width: 100%" @click="activate(0)"> 添加电影 </n-button>
       </n-gi>
-      <!-- 名称 -->
-      <n-gi :span="14">
-        <n-input
-          v-model:value="name"
-          type="text"
-          placeholder="请输入作品名称"
-        />
-      </n-gi>
-      <!-- 评分 -->
-      <n-gi class="rate" :span="5">
-        <n-rate allow-half v-model:value="score" />
-      </n-gi>
-
-      <!-- 标签 -->
-      <n-gi class="tags" :span="20">
-        <n-dynamic-tags v-model:value="tags" />
-      </n-gi>
-      <!-- 按钮 -->
-      <n-gi :span="4">
-        <n-button class="btn" type="primary" @click="addWork">提交</n-button>
+      <n-gi :span="12">
+        <n-button style="width: 100%" @click="activate(1)">
+          添加电视剧
+        </n-button>
       </n-gi>
     </n-grid>
+
+    <n-drawer v-model:show="active" width="382" :placement="placement">
+      <n-drawer-content :title="title">
+        <n-form
+          class="form"
+          ref="formRef"
+          label-placement="left"
+          label-width="auto"
+          size="medium"
+        >
+          <n-form-item label="名称" path="name" required>
+            <n-input v-model:value="name" placeholder="请输入名称" />
+          </n-form-item>
+          <n-form-item label="评分" path="inputValue">
+            <n-rate allow-half v-model:value="score" />
+          </n-form-item>
+          <n-form-item label="标签" path="tags">
+            <n-dynamic-tags v-model:value="tags" />
+          </n-form-item>
+          <n-button type="primary" @click="addWork"> 提交 </n-button>
+        </n-form>
+      </n-drawer-content>
+    </n-drawer>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, reactive, toRaw, toRefs } from "vue";
+import {
+  defineComponent,
+  onBeforeMount,
+  reactive,
+  toRaw,
+  toRefs,
+  watch,
+} from "vue";
 import Statistic from "./components/Statistic/index.vue";
 import RankList from "@/components/RankList/index.vue";
 import { useMessage } from "naive-ui";
 import { db } from "@/db";
 import { compare } from "@/utils";
-import { addTag } from "@/utils/db";
+import { addTagDB, addWorkDB } from "@/db/operate";
+import { searchMovieFormDouBan } from "@/api";
 
 interface DataProps {
+  timer: any;
   moviesCount: number;
   seriesCount: number;
   type: number;
@@ -58,9 +87,14 @@ interface DataProps {
   tags: Array<string>;
   movies: any;
   series: any;
+  active: boolean;
+  placement: string;
+  title: string;
   addWork: () => void;
   clearData: () => void;
   getList: () => void;
+  activate: (type: number) => void;
+  searchMovieFormDouBan: () => void;
 }
 
 export default defineComponent({
@@ -72,6 +106,7 @@ export default defineComponent({
   setup() {
     const message = useMessage();
     const data: DataProps = reactive({
+      timer: null,
       name: "",
       type: 0,
       score: 0,
@@ -80,6 +115,9 @@ export default defineComponent({
       moviesCount: 0,
       series: [],
       seriesCount: 0,
+      active: false,
+      placement: "",
+      title: "",
       /**
        * 添加作品
        */
@@ -97,8 +135,8 @@ export default defineComponent({
         };
 
         try {
-          await db.works.add(work, "name");
-          addTag(work);
+          await addWorkDB(work);
+          await addTagDB(work);
           message.success("添加成功");
           data.clearData();
           data.getList();
@@ -115,6 +153,7 @@ export default defineComponent({
         data.type = 0;
         data.score = 0;
         data.tags = [];
+        data.active = false;
       },
       /**
        * 获取列表
@@ -140,7 +179,45 @@ export default defineComponent({
             data.seriesCount = res.length;
           });
       },
+      /**
+       *
+       * @param type 作品类型
+       */
+      activate(type: number) {
+        data.type = type;
+        data.title = type ? "添加电视剧" : "添加电影";
+        data.placement = type ? "left" : "right";
+        data.active = true;
+      },
+      /**
+       *
+       */
+      searchMovieFormDouBan() {
+        data.timer = setTimeout(() => {
+          searchMovieFormDouBan({
+            q: data.name,
+          }).then((res: any) => {
+            if (res.count) {
+              const info = res.subjects[0];
+              data.tags = Array.from(
+                new Set([...info.countries, ...info.genres])
+              );
+            }
+          });
+        }, 1000);
+      },
     });
+
+    watch(
+      () => data.name,
+      (newVal) => {
+        clearTimeout(data.timer);
+        data.tags = [];
+        if (newVal) {
+          data.searchMovieFormDouBan();
+        }
+      }
+    );
 
     onBeforeMount(() => {
       data.getList();
@@ -168,8 +245,5 @@ export default defineComponent({
 .tags {
   display: flex;
   align-items: center;
-}
-.btn {
-  width: 100%;
 }
 </style>

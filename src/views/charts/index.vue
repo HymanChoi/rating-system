@@ -11,7 +11,7 @@
             :options="chartOptions"
             :series="series"
             @click="handleClick"
-          ></apexchart>
+          />
         </div>
       </n-gi>
       <n-gi :span="12">
@@ -26,7 +26,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, reactive, toRaw, toRefs } from "vue";
+import { defineComponent, onBeforeMount, reactive, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { db } from "@/db";
 import { Tag } from "@/type";
@@ -73,18 +73,26 @@ export default defineComponent({
           },
         },
         colors: [
-          "#3B93A5",
-          "#F7B844",
-          "#ADD8C7",
-          "#EC3C65",
-          "#CDD7B6",
-          "#C1F666",
-          "#D43F97",
-          "#1E5D8C",
-          "#421243",
-          "#7F94B0",
-          "#EF6537",
-          "#C0ADDB",
+          "#BDE978",
+          "#9CD354",
+          "#70B724",
+          "#579D1A",
+          "#418312",
+          "#6AD5FF",
+          "#45BFFF",
+          "#079CFF",
+          "#0579DB",
+          "#035AB7",
+          "#FFDC66",
+          "#FFCD3F",
+          "#FFB600",
+          "#DB9600",
+          "#B77800",
+          "#FF9B7F",
+          "#FF7460",
+          "#FF352B",
+          "#DB1F26",
+          "#B71529",
         ],
         plotOptions: {
           treemap: {
@@ -128,6 +136,10 @@ export default defineComponent({
       },
       /**
        * 查看包含某标签的所有作品
+       *
+       * @param event
+       * @param chartContext
+       * @param config
        */
       async handleClick(event, chartContext, config) {
         data.curTag = data.series[0].data[config.dataPointIndex];
@@ -179,36 +191,5 @@ export default defineComponent({
 }
 .list {
   height: calc(100vh - 165px);
-  padding: 10px;
-  overflow-y: overlay;
-  background-color: rgba(0, 128, 0, 0.12);
-}
-.list-item {
-  display: flex;
-  text-align: center;
-  cursor: pointer;
-  line-height: 32px;
-}
-.list-item:hover {
-  background-color: rgba(0, 128, 0, 1);
-}
-.list-item .id {
-  width: 80px;
-}
-.list-item .name {
-  flex: 1;
-}
-.list-item .score {
-  width: 60px;
-}
-::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
-}
-::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0);
-}
-.list:hover::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.2);
 }
 </style>

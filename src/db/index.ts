@@ -1,5 +1,5 @@
 import Dexie, { Table } from "dexie";
-import { Work, Tag } from "./type";
+import { Work, Tag } from "../type";
 
 export class MySubClassedDexie extends Dexie {
   works!: Table<Work>;
