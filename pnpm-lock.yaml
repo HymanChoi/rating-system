@@ -6,6 +6,7 @@ specifiers:
   '@vue/eslint-config-prettier': ^7.0.0
   '@vue/eslint-config-typescript': ^10.0.0
   apexcharts: ^3.33.2
+  axios: ^0.26.1
   concurrently: ^7.0.0
   cross-env: ^7.0.3
   dexie: ^3.2.1
@@ -27,6 +28,7 @@ specifiers:
 
 dependencies:
   apexcharts: 3.33.2
+  axios: 0.26.1
   dexie: 3.2.1
   pinia: 2.0.12_typescript@4.6.2+vue@3.2.31
   vue: 3.2.31
@@ -858,6 +860,14 @@ packages:
     transitivePeerDependencies:
       - debug
     dev: true
+
+  /axios/0.26.1:
+    resolution: {integrity: sha512-fPwcX4EvnSHuInCMItEhAGnaSEXRBjtzh9fOtsE6E1G6p7vl7edEeZe11QHf18+6+9gR5PbKV/sGKNaD8YaMeA==}
+    dependencies:
+      follow-redirects: 1.14.9
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /babel-walk/3.0.0-canary-5:
     resolution: {integrity: sha512-GAwkz0AihzY5bkwIY5QDR+LvsRQgB/B+1foMPvi0FZPMl5fjD7ICiznUiBdLYMH1QYe6vqu4gWYytZOccLouFw==}
@@ -2036,7 +2046,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: true
 
   /form-data/4.0.0:
     resolution: {integrity: sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==}

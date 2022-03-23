@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "apexcharts": "^3.33.2",
+    "axios": "^0.26.1",
     "dexie": "^3.2.1",
     "pinia": "^2.0.12",
     "vue": "^3.2.25",
