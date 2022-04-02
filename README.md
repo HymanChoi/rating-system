@@ -98,5 +98,5 @@ $ yarn dev
 $ yarn app:build
 
 # build files
-yarn build
+$ yarn build
 ```
