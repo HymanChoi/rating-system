@@ -47,8 +47,7 @@
 import { defineComponent, onBeforeMount, reactive, toRaw, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useMessage } from "naive-ui";
-import { db } from "@/db";
-import { addTagDB, editWorkDB } from "@/db/operate";
+import { addTagDB, editWorkDB, getWorkInfoDB } from "@/db/operate";
 import { searchMovieFormDouBan } from "@/api";
 
 interface DataProps {
@@ -85,13 +84,7 @@ export default defineComponent({
        * @param name 名称
        */
       async getWorkInfo(name: string) {
-        await db.works
-          .where("name")
-          .equals(name)
-          .first()
-          .then((res) => {
-            data.workInfo = res;
-          });
+        data.workInfo = await getWorkInfoDB("name", name);
 
         searchMovieFormDouBan({
           q: name,

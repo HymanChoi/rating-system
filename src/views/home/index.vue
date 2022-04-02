@@ -72,9 +72,8 @@ import {
 import Statistic from "./components/Statistic/index.vue";
 import RankList from "@/components/RankList/index.vue";
 import { useMessage } from "naive-ui";
-import { db } from "@/db";
 import { compare } from "@/utils";
-import { addTagDB, addWorkDB } from "@/db/operate";
+import { addTagDB, addWorkDB, getWorkListDB } from "@/db/operate";
 import { searchMovieFormDouBan } from "@/api";
 
 interface DataProps {
@@ -158,26 +157,16 @@ export default defineComponent({
       /**
        * 获取列表
        */
-      getList() {
+      async getList() {
         // 获取电影列表
-        db.works
-          .where("type")
-          .equals(0)
-          .toArray()
-          .then((res) => {
-            data.movies = res.sort(compare("score", "desc"));
-            data.moviesCount = res.length;
-          });
+        const moviesList = await getWorkListDB("type", 0);
+        data.movies = moviesList.sort(compare("score", "desc"));
+        data.moviesCount = moviesList.length;
 
         // 获取电视剧列表
-        db.works
-          .where("type")
-          .equals(1)
-          .toArray()
-          .then((res) => {
-            data.series = res.sort(compare("score", "desc"));
-            data.seriesCount = res.length;
-          });
+        const seriesList = await getWorkListDB("type", 1);
+        data.series = seriesList.sort(compare("score", "desc"));
+        data.seriesCount = seriesList.length;
       },
       /**
        *

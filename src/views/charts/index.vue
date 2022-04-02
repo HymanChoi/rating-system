@@ -28,10 +28,32 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, reactive, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { db } from "@/db";
 import { Tag } from "@/type";
-import { compare } from "@/utils";
 import RankList from "@/components/RankList/index.vue";
+import {
+  getTagListDB,
+  getWorkCountByTagDB,
+  getWorkListByTagDB,
+} from "@/db/operate";
+import { compare } from "@/utils";
+
+interface CurTag {
+  x: string;
+  y: number;
+}
+
+interface DataProps {
+  type: number;
+  list: Array<any>;
+  curTag: CurTag;
+  series: Array<any>;
+  chartOptions: object;
+  handleBack: () => void;
+  getTags: () => void;
+  getTagsCount: (tags: Array<Tag>) => void;
+  handleClick: (_event: any, _chartContext: any, config: any) => void;
+  goToWorkInfo: (name: string) => void;
+}
 
 export default defineComponent({
   name: "Charts",
@@ -41,10 +63,10 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const router = useRouter();
-    const data = reactive({
+    const data: DataProps = reactive({
       type: 0,
       list: [],
-      curTag: {},
+      curTag: { x: "", y: 0 },
       series: [
         {
           data: [],
@@ -111,46 +133,30 @@ export default defineComponent({
        * 获取标签列表
        */
       async getTags() {
-        const tags =
-          data.type === 0
-            ? await db.moviesTags.toArray()
-            : await db.seriesTags.toArray();
-
+        const tags = await getTagListDB(data.type);
         data.getTagsCount(tags);
       },
       /**
        *
        */
-      async getTagsCount(tags: Tag[]) {
+      async getTagsCount(tags: Array<Tag>) {
         for (let i = 0; i < tags.length; i++) {
           const tag = tags[i];
-          const count = await db.works
-            .where("type")
-            .equals(data.type)
-            .filter((i) => {
-              return i.tags.indexOf(tag.name) !== -1;
-            })
-            .count();
+          const count = await getWorkCountByTagDB("type", data.type, tag.name);
           data.series[0].data.push({ x: tag.name, y: count });
         }
       },
       /**
        * 查看包含某标签的所有作品
        *
-       * @param event
-       * @param chartContext
+       * @param _event
+       * @param _chartContext
        * @param config
        */
-      async handleClick(event, chartContext, config) {
+      async handleClick(_event: any, _chartContext: any, config: any) {
         data.curTag = data.series[0].data[config.dataPointIndex];
-        data.list = await db.works
-          .where("type")
-          .equals(data.type)
-          .filter((i) => {
-            return i.tags.indexOf(data.curTag.x) !== -1;
-          })
-          .toArray()
-          .then((res) => res.sort(compare("score", "desc")));
+        const list = await getWorkListByTagDB("type", data.type, data.curTag.x);
+        data.list = list.sort(compare("score", "desc"));
       },
       /**
        * 跳转到作品详情页

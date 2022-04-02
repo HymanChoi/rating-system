@@ -23,10 +23,10 @@ export function getLocalData(name: string) {
  * @param prop 排序属性
  * @param type asc-升序 desc-降序
  */
-export function compare(prop: string, type: string = "asc") {
+export function compare(prop: string, type = "asc") {
   return function (m: any, n: any) {
-    var a = m[prop];
-    var b = n[prop];
+    const a = m[prop];
+    const b = n[prop];
     return type === "desc" ? b - a : a - b;
   };
 }
