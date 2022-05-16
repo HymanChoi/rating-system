@@ -1,5 +1,14 @@
 # Rating System
 
+💁‍♂️ 项目预览
+
+<div>
+<img src="https://s2.loli.net/2022/05/16/mqsSalVJD7bWNnC.png" width="342px" /> 
+<img src="https://s2.loli.net/2022/05/16/QqSDE95YhsvJdgZ.png" width="342px" /> 
+<img src="https://s2.loli.net/2022/05/16/mAnbJ2g9Ga5i81x.png" width="342px" /> 
+<img src="https://s2.loli.net/2022/05/16/R1je6woEdtVMTmS.png" width="342px" /> 
+</div>
+
 ### 项目介绍
 
 影视作品评分系统
