@@ -94,18 +94,18 @@ $ pnpm install
 
 ```
 # work with electron in development mode
-$ yarn electron:dev
+$ pnpm electron:dev
 
 # open vite in browser in development mode
-$ yarn dev
+$ pnpm dev
 ```
 
 ### 构建应用
 
 ```
 # build electron app
-$ yarn app:build
+$ pnpm app:build
 
 # build files
-$ yarn build
+$ pnpm build
 ```
